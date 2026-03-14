@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <meta name="apple-mobile-web-app-title" content="Sneaker Vault"/>
@@ -15,108 +15,154 @@
     body { background: #080810; color: #f0ede8; font-family: 'DM Sans', sans-serif; min-height: 100vh; }
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-thumb { background: #2a2a35; border-radius: 2px; }
-
-    @keyframes fuup { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes fall  { from { transform:translateY(-20px) rotate(0deg); opacity:1; } to { transform:translateY(110vh) rotate(720deg); opacity:0; } }
-    @keyframes pop   { 0%{transform:translate(-50%,-50%) scale(0.3);opacity:0} 60%{transform:translate(-50%,-50%) scale(1.1)} 100%{transform:translate(-50%,-50%) scale(1);opacity:1} }
-
-    .sv-card { animation: fuup 0.3s ease; transition: transform 0.2s, box-shadow 0.2s; }
-    .sv-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.6); }
     button { font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; }
 
-    /* Header */
-    #header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(8,8,16,0.97); backdrop-filter: blur(20px);
-      border-bottom: 1px solid #16161f; padding: 20px 20px 0;
-    }
+    @keyframes fuup { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fall  { from{transform:translateY(-20px) rotate(0deg);opacity:1} to{transform:translateY(110vh) rotate(720deg);opacity:0} }
+    @keyframes pop   { 0%{transform:translate(-50%,-50%) scale(0.3);opacity:0} 60%{transform:translate(-50%,-50%) scale(1.1)} 100%{transform:translate(-50%,-50%) scale(1);opacity:1} }
+    @keyframes spin  { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+    .sv-card { animation: fuup 0.3s ease; transition: transform 0.2s, box-shadow 0.2s; }
+    .sv-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.5); }
+
+    /* ── Header ── */
+    #header { position: sticky; top: 0; z-index: 100; background: rgba(8,8,16,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid #16161f; padding: 18px 18px 0; }
     .header-inner { max-width: 1100px; margin: 0 auto; }
-    .header-top { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
-    .vault-title {
-      font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px, 8vw, 52px);
-      letter-spacing: 6px; line-height: 1;
-      background: linear-gradient(135deg, #FFD700 0%, #FF6B35 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
-    .vault-sub { color: #444; font-size: 12px; letter-spacing: 2px; margin-top: 4px; }
-    .header-actions { display: flex; gap: 10px; align-items: center; }
+    .header-top { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+    .vault-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px,7vw,48px); letter-spacing: 6px; line-height: 1; background: linear-gradient(135deg,#FFD700 0%,#FF6B35 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .vault-sub { color: #444; font-size: 11px; letter-spacing: 2px; margin-top: 3px; }
+    .header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     .view-toggle { display: flex; background: #13131a; border-radius: 8px; padding: 3px; border: 1px solid #1e1e2a; }
-    .view-btn { padding: 7px 13px; background: transparent; color: #444; border-radius: 6px; font-size: 16px; transition: all 0.15s; }
+    .view-btn { padding: 6px 11px; background: transparent; color: #444; border-radius: 6px; font-size: 15px; transition: all 0.15s; }
     .view-btn.active { background: #2a2a3a; color: #f0ede8; }
-    .add-btn { padding: 10px 20px; background: linear-gradient(135deg,#FFD700,#FF8C00); color: #080810; border-radius: 10px; font-family: 'Bebas Neue', sans-serif; font-size: 19px; letter-spacing: 2px; box-shadow: 0 4px 20px rgba(255,180,0,0.25); }
-    #progress-bar { height: 3px; background: #16161f; border-radius: 2px; margin-bottom: 14px; overflow: hidden; }
+    .add-btn { padding: 9px 18px; background: linear-gradient(135deg,#FFD700,#FF8C00); color: #080810; border-radius: 10px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; box-shadow: 0 4px 16px rgba(255,180,0,0.25); }
+
+    /* Search + controls bar */
+    .controls-bar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .search-wrap { position: relative; flex: 1; min-width: 160px; }
+    .search-wrap input { width: 100%; padding: 8px 12px 8px 32px; background: #0d0d18; border: 1px solid #1e1e2a; border-radius: 8px; color: #f0ede8; font-size: 13px; outline: none; font-family: 'DM Sans', sans-serif; }
+    .search-wrap input::placeholder { color: #444; }
+    .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 13px; color: #444; pointer-events: none; }
+    .sort-select { padding: 8px 10px; background: #0d0d18; border: 1px solid #1e1e2a; border-radius: 8px; color: #888; font-size: 12px; font-family: 'DM Sans', sans-serif; outline: none; cursor: pointer; }
+    .color-filter-btn { padding: 8px 12px; background: #0d0d18; border: 1px solid #1e1e2a; border-radius: 8px; color: #888; font-size: 12px; display: flex; align-items: center; gap: 6px; transition: border-color 0.15s; }
+    .color-filter-btn.active { border-color: #FFD700; color: #FFD700; }
+
+    /* Color filter dropdown */
+    #color-filter-panel { background: #13131a; border: 1px solid #2a2a3a; border-radius: 12px; padding: 14px; margin-bottom: 12px; display: none; flex-wrap: wrap; gap: 8px; }
+    .cf-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: transform 0.15s, border-color 0.15s; }
+    .cf-swatch:hover { transform: scale(1.15); }
+    .cf-swatch.selected { border-color: #fff; transform: scale(1.15); }
+    .cf-clear { padding: 5px 12px; background: transparent; border: 1px solid #2a2a3a; border-radius: 20px; color: #666; font-size: 12px; }
+
+    #progress-bar { height: 3px; background: #16161f; border-radius: 2px; margin-bottom: 12px; overflow: hidden; }
     #progress-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
     #tabs { display: flex; }
-    .tab-btn { padding: 8px 18px; background: none; border: none; border-bottom: 2px solid transparent; color: #444; font-weight: 500; font-size: 13px; margin-bottom: -1px; transition: all 0.15s; }
+    .tab-btn { padding: 7px 16px; background: none; border: none; border-bottom: 2px solid transparent; color: #444; font-weight: 500; font-size: 12px; margin-bottom: -1px; transition: all 0.15s; }
     .tab-btn.active { border-bottom-color: #FFD700; color: #FFD700; }
 
-    /* Collection */
-    #collection { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+    /* ── Collection ── */
+    #collection { max-width: 1100px; margin: 0 auto; padding: 20px 18px; }
     #empty-state { text-align: center; padding: 80px 20px; }
     #empty-state .big-shoe { font-size: 70px; margin-bottom: 16px; }
-    #empty-state h2 { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 5px; color: #2a2a3a; margin-bottom: 10px; }
-    #empty-state p { color: #3a3a4a; font-size: 15px; margin-bottom: 24px; }
-    #empty-state .start-btn { padding: 14px 36px; background: linear-gradient(135deg,#FFD700,#FF8C00); color: #080810; border-radius: 12px; font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 3px; box-shadow: 0 8px 30px rgba(255,180,0,0.2); }
+    #empty-state h2 { font-family: 'Bebas Neue', sans-serif; font-size: 34px; letter-spacing: 5px; color: #2a2a3a; margin-bottom: 10px; }
+    #empty-state p { color: #3a3a4a; font-size: 14px; margin-bottom: 24px; }
+    #empty-state .start-btn { padding: 13px 32px; background: linear-gradient(135deg,#FFD700,#FF8C00); color: #080810; border-radius: 12px; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; box-shadow: 0 8px 24px rgba(255,180,0,0.2); }
 
-    #grid-view { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-    @media (max-width: 700px) { #grid-view { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 400px) { #grid-view { grid-template-columns: repeat(2, 1fr); } }
+    #grid-view { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+    @media (max-width: 700px) { #grid-view { grid-template-columns: repeat(2,1fr); } }
 
-    .grid-card { background: #13131a; border-radius: 14px; padding: 14px; position: relative; }
-    .grid-card .worn-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,200,100,0.12); border: 1px solid rgba(0,200,100,0.25); border-radius: 20px; padding: 2px 7px; font-size: 9px; color: #00C864; font-weight: 700; letter-spacing: 1px; }
-    .grid-card .img-box { display: flex; justify-content: center; align-items: center; height: 110px; margin-bottom: 10px; background: #0a0a12; border-radius: 10px; overflow: hidden; }
-    .grid-card .img-box img { width: 100%; height: 100%; object-fit: contain; }
-    .grid-card .shoe-emoji { font-size: 36px; }
-    .grid-card .card-name { font-weight: 600; font-size: 12px; line-height: 1.3; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .grid-card .card-actions { display: flex; gap: 5px; }
-    .worn-btn-grid { flex: 1; padding: 7px 0; border-radius: 7px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; transition: filter 0.15s; }
+    /* Grid card */
+    .grid-card { background: #13131a; border-radius: 14px; padding: 12px; position: relative; }
+    .worn-badge-abs { position: absolute; top: 8px; right: 8px; background: rgba(0,200,100,0.12); border: 1px solid rgba(0,200,100,0.25); border-radius: 20px; padding: 2px 6px; font-size: 8px; color: #00C864; font-weight: 700; letter-spacing: 1px; }
+    .img-box { display: flex; justify-content: center; align-items: center; height: 100px; margin-bottom: 8px; background: #0a0a12; border-radius: 10px; overflow: hidden; }
+    .img-box img { width: 100%; height: 100%; object-fit: contain; }
+    .card-name-txt { font-weight: 600; font-size: 11px; line-height: 1.3; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* Color dots on card */
+    .color-dots { display: flex; gap: 4px; margin-bottom: 8px; align-items: center; }
+    .color-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; }
+    .add-color-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px dashed #333; background: transparent; font-size: 8px; color: #444; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+
+    /* Outfit suggestion */
+    .outfit-row { display: flex; gap: 6px; margin-bottom: 8px; align-items: center; }
+    .outfit-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .outfit-icon { font-size: 18px; }
+    .outfit-swatch { width: 18px; height: 6px; border-radius: 3px; }
+    .outfit-label { font-size: 8px; color: #555; }
+    .no-colors-hint { font-size: 9px; color: #333; margin-bottom: 8px; font-style: italic; }
+
+    .card-actions { display: flex; gap: 5px; }
+    .worn-btn-grid { flex: 1; padding: 6px 0; border-radius: 7px; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; transition: filter 0.15s; }
     .worn-btn-grid:hover { filter: brightness(1.3); }
-    .del-btn-grid { padding: 7px 9px; background: rgba(255,40,40,0.06); border: 1px solid rgba(255,40,40,0.1) !important; border-radius: 7px; color: #664444; font-size: 11px; }
+    .edit-btn-grid { padding: 6px 7px; background: rgba(255,255,255,0.04); border: 1px solid #1e1e2a; border-radius: 7px; color: #555; font-size: 11px; }
+    .del-btn-grid  { padding: 6px 7px; background: rgba(255,40,40,0.05); border: 1px solid rgba(255,40,40,0.1); border-radius: 7px; color: #553333; font-size: 11px; }
 
-    #list-view { display: flex; flex-direction: column; gap: 10px; }
-    .list-card { background: #13131a; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 14px; }
-    .list-card .thumb { width: 60px; height: 60px; background: #0a0a12; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-    .list-card .thumb img { width: 100%; height: 100%; object-fit: contain; }
-    .list-card .thumb .shoe-emoji { font-size: 24px; }
-    .list-card .card-name { flex: 1; font-weight: 600; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .list-card .worn-badge-list { background: rgba(0,200,100,0.1); border: 1px solid rgba(0,200,100,0.2); border-radius: 20px; padding: 3px 10px; font-size: 10px; color: #00C864; font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
-    .worn-btn-list { padding: 8px 14px; border-radius: 8px; font-size: 11px; font-weight: 700; white-space: nowrap; transition: filter 0.15s; }
+    /* List card */
+    #list-view { display: flex; flex-direction: column; gap: 8px; }
+    .list-card { background: #13131a; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; }
+    .thumb { width: 54px; height: 54px; background: #0a0a12; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .thumb img { width: 100%; height: 100%; object-fit: contain; }
+    .list-info { flex: 1; min-width: 0; }
+    .list-name { font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 4px; }
+    .list-colors { display: flex; gap: 4px; margin-bottom: 4px; }
+    .list-outfit { display: flex; gap: 8px; align-items: center; }
+    .list-outfit-item { display: flex; align-items: center; gap: 3px; font-size: 10px; color: #666; }
+    .list-outfit-swatch { width: 10px; height: 10px; border-radius: 2px; }
+    .worn-badge-list { background: rgba(0,200,100,0.1); border: 1px solid rgba(0,200,100,0.2); border-radius: 20px; padding: 3px 8px; font-size: 9px; color: #00C864; font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
+    .worn-btn-list { padding: 7px 12px; border-radius: 8px; font-size: 10px; font-weight: 700; white-space: nowrap; transition: filter 0.15s; }
     .worn-btn-list:hover { filter: brightness(1.3); }
-    .del-btn-list { padding: 8px 10px; background: none !important; border: 1px solid #1e1e2a !important; border-radius: 8px; color: #554444; font-size: 13px; }
+    .edit-btn-list { padding: 7px 8px; background: rgba(255,255,255,0.04); border: 1px solid #1e1e2a; border-radius: 8px; color: #555; font-size: 12px; }
+    .del-btn-list  { padding: 7px 8px; background: none; border: 1px solid #1e1e2a; border-radius: 8px; color: #443333; font-size: 12px; }
 
-    /* Overlay */
-    .overlay { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .modal { background: #13131a; border: 1px solid #2a2a3a; border-radius: 20px; padding: 32px; max-width: 440px; width: 100%; animation: fuup 0.2s ease; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; background: linear-gradient(135deg,#FFD700,#FF8C00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .close-btn { background: none; color: #555; font-size: 24px; }
-    .text-inp { background: #0a0a12; border: 1px solid #2a2a3a; border-radius: 10px; color: #f0ede8; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; padding: 12px 16px; width: 100%; margin-bottom: 16px; }
-    .upload-zone { border: 2px dashed #2a2a3a; border-radius: 12px; padding: 28px 20px; text-align: center; cursor: pointer; margin-bottom: 16px; transition: border-color 0.2s; }
+    /* ── Modals ── */
+    .overlay { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
+    .modal { background: #13131a; border: 1px solid #2a2a3a; border-radius: 20px; padding: 28px; max-width: 440px; width: 100%; animation: fuup 0.2s ease; }
+    .modal-sm { max-width: 380px; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 3px; background: linear-gradient(135deg,#FFD700,#FF8C00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .close-btn { background: none; color: #555; font-size: 22px; }
+    .field-label { font-size: 11px; color: #555; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; display: block; }
+    .text-inp { background: #0a0a12; border: 1px solid #2a2a3a; border-radius: 10px; color: #f0ede8; font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; padding: 11px 14px; width: 100%; margin-bottom: 14px; }
+    .upload-zone { border: 2px dashed #2a2a3a; border-radius: 12px; padding: 24px 16px; text-align: center; cursor: pointer; margin-bottom: 8px; transition: border-color 0.2s; }
     .upload-zone:hover { border-color: #444; }
-    .upload-zone img { max-height: 130px; object-fit: contain; }
-    .upload-icon { font-size: 34px; margin-bottom: 8px; }
-    .upload-label { color: #555; font-size: 14px; }
-    .upload-hint  { color: #333; font-size: 12px; margin-top: 4px; }
-    .remove-img { background: none; color: #555; font-size: 12px; display: block; margin-bottom: 14px; padding: 0; }
-    .add-to-vault { width: 100%; padding: 14px 0; color: #080810; border-radius: 12px; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; transition: all 0.2s; }
+    .upload-zone img { max-height: 120px; object-fit: contain; }
+    .upload-icon { font-size: 30px; margin-bottom: 6px; }
+    .upload-label { color: #555; font-size: 13px; }
+    .upload-hint  { color: #333; font-size: 11px; margin-top: 3px; }
+    .remove-img { background: none; color: #555; font-size: 11px; margin-bottom: 14px; padding: 0; display: block; }
+
+    /* Color section in modal */
+    .color-section { margin-bottom: 16px; }
+    .color-row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+    .color-picker-wrap { position: relative; width: 32px; height: 32px; flex-shrink: 0; cursor: pointer; }
+    .color-preview { width: 32px; height: 32px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); }
+    .color-inp { -webkit-appearance: none; appearance: none; width: 32px; height: 32px; border-radius: 50%; border: none; padding: 0; cursor: pointer; background: none; }
+    .color-inp::-webkit-color-swatch-wrapper { padding: 0; border-radius: 50%; }
+    .color-inp::-webkit-color-swatch { border: none; border-radius: 50%; }
+    .color-row-label { font-size: 12px; color: #888; flex: 1; }
+    .auto-extract-btn { padding: 5px 10px; background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.2); border-radius: 6px; color: #00D4FF; font-size: 11px; }
+    .auto-extract-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .spinner { display: inline-block; animation: spin 0.8s linear infinite; }
+
+    .add-to-vault { width: 100%; padding: 13px 0; color: #080810; border-radius: 12px; font-family: 'Bebas Neue', sans-serif; font-size: 21px; letter-spacing: 3px; transition: all 0.2s; margin-top: 4px; }
 
     /* Confirm modal */
-    .confirm-modal { max-width: 360px; text-align: center; }
-    .confirm-icon { font-size: 52px; margin-bottom: 12px; }
-    .confirm-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px; margin-bottom: 8px; }
-    .confirm-body { color: #888; font-size: 14px; margin-bottom: 28px; line-height: 1.6; }
-    .confirm-name { color: #f0ede8; font-weight: 600; }
+    .confirm-modal { max-width: 340px; text-align: center; }
+    .confirm-icon  { font-size: 48px; margin-bottom: 10px; }
+    .confirm-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; margin-bottom: 8px; }
+    .confirm-body  { color: #888; font-size: 13px; margin-bottom: 24px; line-height: 1.6; }
+    .confirm-name  { color: #f0ede8; font-weight: 600; }
     .confirm-actions { display: flex; gap: 10px; }
-    .cancel-btn { flex: 1; padding: 12px 0; background: transparent; border: 1px solid #2a2a3a !important; border-radius: 10px; color: #666; font-size: 14px; }
-    .go-btn { flex: 1; padding: 12px 0; border-radius: 10px; font-weight: 700; font-size: 14px; }
+    .cancel-btn { flex: 1; padding: 11px 0; background: transparent; border: 1px solid #2a2a3a; border-radius: 10px; color: #666; font-size: 13px; }
+    .go-btn     { flex: 1; padding: 11px 0; border-radius: 10px; font-weight: 700; font-size: 13px; }
 
     /* Confetti */
     #confetti-layer { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; display: none; }
     .cf-piece { position: absolute; top: -20px; border-radius: 50%; }
     #confetti-msg { position: absolute; top: 40%; left: 50%; animation: pop 0.5s ease forwards; text-align: center; white-space: nowrap; }
-    #confetti-msg .trophy { font-size: 60px; }
-    #confetti-msg .big-text { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px,6vw,44px); color: #FFD700; letter-spacing: 4px; text-shadow: 0 0 40px rgba(255,215,0,0.9); }
-    #confetti-msg .small-text { font-family: 'DM Sans', sans-serif; color: #fff; font-size: 16px; margin-top: 8px; opacity: 0.8; }
+    #confetti-msg .trophy { font-size: 56px; }
+    #confetti-msg .big-text { font-family: 'Bebas Neue', sans-serif; font-size: clamp(26px,5vw,42px); color: #FFD700; letter-spacing: 4px; text-shadow: 0 0 40px rgba(255,215,0,0.9); }
+    #confetti-msg .small-text { font-family: 'DM Sans', sans-serif; color: #fff; font-size: 15px; margin-top: 6px; opacity: 0.8; }
   </style>
 </head>
 <body>
@@ -137,11 +183,29 @@
         <button class="add-btn" onclick="openAddModal()">+ ADD</button>
       </div>
     </div>
-    <div id="progress-bar" style="display:none">
-      <div id="progress-fill"></div>
+
+    <!-- Search + sort + color filter -->
+    <div class="controls-bar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-inp" placeholder="Search sneakers..." oninput="render()"/>
+      </div>
+      <select class="sort-select" id="sort-select" onchange="render()">
+        <option value="added">Added ↓</option>
+        <option value="name">Name A–Z</option>
+        <option value="name-desc">Name Z–A</option>
+      </select>
+      <button class="color-filter-btn" id="color-filter-btn" onclick="toggleColorPanel()">
+        <span>🎨</span> <span id="color-filter-label">Color</span>
+      </button>
     </div>
+
+    <!-- Color filter swatches -->
+    <div id="color-filter-panel"></div>
+
+    <div id="progress-bar" style="display:none"><div id="progress-fill"></div></div>
     <div id="tabs" style="display:none">
-      <button class="tab-btn active" onclick="setTab('all')"   id="tab-all">All</button>
+      <button class="tab-btn active" onclick="setTab('all')"    id="tab-all">All</button>
       <button class="tab-btn"        onclick="setTab('unworn')" id="tab-unworn">Unworn</button>
       <button class="tab-btn"        onclick="setTab('worn')"   id="tab-worn">Worn</button>
     </div>
@@ -160,14 +224,18 @@
   <div id="list-view" style="display:none"></div>
 </div>
 
-<!-- Add Modal -->
+<!-- Add / Edit Modal -->
 <div class="overlay" id="add-overlay" style="display:none" onclick="if(event.target===this)closeAddModal()">
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-title">ADD SNEAKER</div>
+      <div class="modal-title" id="modal-title-text">ADD SNEAKER</div>
       <button class="close-btn" onclick="closeAddModal()">✕</button>
     </div>
-    <input class="text-inp" id="sneaker-name-inp" type="text" placeholder="Sneaker name / colorway" onkeydown="if(event.key==='Enter')doAdd()"/>
+
+    <label class="field-label">Name / Colorway</label>
+    <input class="text-inp" id="sneaker-name-inp" type="text" placeholder="e.g. Jordan 1 Chicago" onkeydown="if(event.key==='Enter')doAdd()"/>
+
+    <label class="field-label">Photo</label>
     <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-inp').click()">
       <div id="upload-placeholder">
         <div class="upload-icon">📸</div>
@@ -178,6 +246,36 @@
     </div>
     <input type="file" id="file-inp" accept="image/*" style="display:none" onchange="handleFile(this)"/>
     <button class="remove-img" id="remove-img-btn" style="display:none" onclick="removeImg()">✕ Remove image</button>
+
+    <!-- Color section -->
+    <div class="color-section">
+      <label class="field-label">Colors</label>
+
+      <div class="color-row">
+        <div class="color-picker-wrap" onclick="document.getElementById('primary-color-inp').click()">
+          <div class="color-preview" id="primary-preview" style="background:#ffffff"></div>
+          <input type="color" id="primary-color-inp" value="#ffffff" oninput="syncColorPreview('primary')" style="position:absolute;opacity:0;width:32px;height:32px;cursor:pointer;top:0;left:0"/>
+        </div>
+        <div>
+          <span class="color-row-label">Primary color</span>
+          <div id="primary-color-label" style="font-size:10px;color:#FFD700;margin-top:1px"></div>
+        </div>
+        <button class="auto-extract-btn" id="auto-extract-btn" onclick="autoExtractColors()" disabled>⟳ Auto-detect</button>
+      </div>
+
+      <div class="color-row">
+        <div class="color-picker-wrap" onclick="document.getElementById('secondary-color-inp').click()">
+          <div class="color-preview" id="secondary-preview" style="background:#cccccc"></div>
+          <input type="color" id="secondary-color-inp" value="#cccccc" oninput="syncColorPreview('secondary')" style="position:absolute;opacity:0;width:32px;height:32px;cursor:pointer;top:0;left:0"/>
+        </div>
+        <div>
+          <span class="color-row-label">Secondary color <span style="color:#444;font-size:10px">(optional)</span></span>
+          <div id="secondary-color-label" style="font-size:10px;color:#888;margin-top:1px"></div>
+        </div>
+      </div>
+      <div style="font-size:10px;color:#333;margin-top:-4px;margin-bottom:4px">Click the circle to open color picker. Upload a photo first to enable auto-detect.</div>
+    </div>
+
     <button class="add-to-vault" id="add-to-vault-btn" onclick="doAdd()" style="background:#1a1a22;opacity:0.35;cursor:not-allowed">ADD TO VAULT</button>
   </div>
 </div>
@@ -187,10 +285,7 @@
   <div class="modal confirm-modal">
     <div class="confirm-icon" id="confirm-icon"></div>
     <div class="confirm-title" id="confirm-title"></div>
-    <div class="confirm-body">
-      <span class="confirm-name" id="confirm-name"></span><br/>
-      <span id="confirm-sub"></span>
-    </div>
+    <div class="confirm-body"><span class="confirm-name" id="confirm-name"></span><br/><span id="confirm-sub"></span></div>
     <div class="confirm-actions">
       <button class="cancel-btn" onclick="closeConfirm()">Cancel</button>
       <button class="go-btn" id="confirm-go-btn" onclick="doToggleWorn()">Confirm</button>
@@ -207,275 +302,632 @@
   </div>
 </div>
 
+<!-- Hidden canvas for color extraction -->
+<canvas id="extract-canvas" style="display:none"></canvas>
+
 <script>
-  const STORAGE_KEY = 'sneaker-vault-v4';
-  let collection = [];
-  let currentView = 'grid';
-  let currentTab  = 'all';
-  let pendingImg  = null;
-  let confirmId   = null;
+// ─────────────────────────────────────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'sneaker-vault-v5';
+let collection   = [];
+let currentView  = 'grid';
+let currentTab   = 'all';
+let pendingImg   = null;
+let confirmId    = null;
+let editId       = null;          // null = adding new, number = editing existing
+let selectedColorFilter = null;  // hex string or null
+let colorPanelOpen = false;
 
-  // ---- Storage (localStorage for standalone PWA) ----
-  function load() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) collection = JSON.parse(raw);
-    } catch {}
-    render();
+// ─────────────────────────────────────────────────────────────────────────────
+// Storage
+// ─────────────────────────────────────────────────────────────────────────────
+function load() {
+  try { const r = localStorage.getItem(STORAGE_KEY); if (r) collection = JSON.parse(r); } catch {}
+  buildColorPanel();
+  render();
+}
+function persist() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collection)); } catch {}
+  buildColorPanel();
+  render();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Color helpers
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Convert hex to HSL
+function hexToHsl(hex) {
+  let r = parseInt(hex.slice(1,3),16)/255;
+  let g = parseInt(hex.slice(3,5),16)/255;
+  let b = parseInt(hex.slice(5,7),16)/255;
+  const max = Math.max(r,g,b), min = Math.min(r,g,b);
+  let h, s, l = (max+min)/2;
+  if (max === min) { h = s = 0; }
+  else {
+    const d = max - min;
+    s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max) {
+      case r: h = ((g-b)/d + (g<b?6:0))/6; break;
+      case g: h = ((b-r)/d + 2)/6; break;
+      case b: h = ((r-g)/d + 4)/6; break;
+    }
   }
+  return { h: h*360, s: s*100, l: l*100 };
+}
 
-  function persist() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collection)); } catch {}
-    render();
-  }
+function hslToHex(h, s, l) {
+  s /= 100; l /= 100;
+  const k = n => (n + h/30) % 12;
+  const a = s * Math.min(l, 1-l);
+  const f = n => l - a*Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n), 1)));
+  const toHex = x => Math.round(x*255).toString(16).padStart(2,'0');
+  return '#' + toHex(f(0)) + toHex(f(8)) + toHex(f(4));
+}
 
-  // ---- Render ----
-  function render() {
-    const total = collection.length;
-    const worn  = collection.filter(s => s.worn).length;
+// Named color buckets for filter panel
+const COLOR_BUCKETS = [
+  { name:'White',   hex:'#f5f5f5', test: h => h.l > 75 },
+  { name:'Black',   hex:'#1a1a1a', test: h => h.l < 15 },
+  { name:'Grey',    hex:'#888888', test: h => h.l >= 15 && h.l <= 75 && h.s < 12 },
+  { name:'Brown',   hex:'#7a4520', test: h => h.h >= 15 && h.h < 45 && h.s > 15 && h.l < 42 },
+  { name:'Red',     hex:'#e03030', test: h => (h.h < 15 || h.h >= 345) && h.s > 20 },
+  { name:'Orange',  hex:'#e07020', test: h => h.h >= 15 && h.h < 45 && h.s > 20 && h.l >= 42 },
+  { name:'Yellow',  hex:'#e0c020', test: h => h.h >= 45 && h.h < 75 && h.s > 20 },
+  { name:'Green',   hex:'#30a040', test: h => h.h >= 75 && h.h < 165 && h.s > 25 },
+  { name:'Cyan',    hex:'#0ab5c0', test: h => h.h >= 165 && h.h < 200 && h.s > 35 },
+  { name:'Blue',    hex:'#2060d0', test: h => h.h >= 200 && h.h < 265 && h.s > 15 },
+  { name:'Purple',  hex:'#7030c0', test: h => h.h >= 265 && h.h < 315 && h.s > 15 },
+  { name:'Pink',    hex:'#d05080', test: h => h.h >= 315 && h.h < 345 && h.s > 20 },
+  { name:'Beige',   hex:'#d4b896', test: h => h.h >= 25 && h.h < 55 && h.s > 8 && h.s < 40 && h.l > 55 },
+];
 
-    // Cycle text
-    document.getElementById('cycle-text').textContent =
-      total === 0 ? 'YOUR COLLECTION AWAITS' : worn + ' OF ' + total + ' WORN THIS CYCLE';
+function colorBucket(hex) {
+  if (!hex) return null;
+  const h = hexToHsl(hex);
+  // Brown before orange (both match orange hue range, but brown is dark)
+  for (const b of COLOR_BUCKETS) { if (b.test(h)) return b; }
+  return null;
+}
 
-    // Progress bar
-    const pb = document.getElementById('progress-bar');
+function sneakerMatchesBucket(s, bucketName) {
+  const p = colorBucketNearest(s.colorPrimary);
+  return p && p.name === bucketName;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Outfit matching (color theory rules)
+// ─────────────────────────────────────────────────────────────────────────────
+const OUTFIT_MAP = {
+  White:  { pants: ['#1a1a2e','#2d4a7a','#4a3728','#333333'], tops: ['#1a1a2e','#c0392b','#2d4a7a','#2ecc71'] },
+  Black:  { pants: ['#f5f5f5','#c0392b','#2d4a7a','#666666'], tops: ['#f5f5f5','#e8d5b0','#c0392b','#cccccc'] },
+  Grey:   { pants: ['#1a1a2e','#f5f5f5','#4a3728','#c0392b'], tops: ['#1a1a2e','#f5f5f5','#2d4a7a','#c0392b'] },
+  Red:    { pants: ['#1a1a2e','#f5f5f5','#333333','#c8a882'],  tops: ['#f5f5f5','#1a1a2e','#c8a882','#333333'] },
+  Orange: { pants: ['#1a1a2e','#4a3728','#333333','#f5f5f5'],  tops: ['#1a1a2e','#f5f5f5','#c8a882','#333333'] },
+  Yellow: { pants: ['#1a1a2e','#333333','#4a3728','#2d4a7a'],  tops: ['#1a1a2e','#333333','#2d4a7a','#4a3728'] },
+  Green:  { pants: ['#c8a882','#1a1a2e','#f5f5f5','#333333'],  tops: ['#f5f5f5','#1a1a2e','#c8a882','#e8d5b0'] },
+  Cyan:   { pants: ['#1a1a2e','#f5f5f5','#333333','#c8a882'],  tops: ['#f5f5f5','#1a1a2e','#333333','#c8a882'] },
+  Blue:   { pants: ['#f5f5f5','#c8a882','#333333','#1a1a2e'],  tops: ['#f5f5f5','#c8a882','#e8d5b0','#333333'] },
+  Purple: { pants: ['#f5f5f5','#1a1a2e','#c8a882','#333333'],  tops: ['#f5f5f5','#e8d5b0','#c8a882','#1a1a2e'] },
+  Pink:   { pants: ['#1a1a2e','#f5f5f5','#333333','#c8a882'],  tops: ['#f5f5f5','#1a1a2e','#c8a882','#333333'] },
+  Brown:  { pants: ['#c8a882','#f5f5f5','#1a1a2e','#e8d5b0'],  tops: ['#f5f5f5','#e8d5b0','#c8a882','#1a1a2e'] },
+  Beige:  { pants: ['#1a1a2e','#4a3728','#333333','#2d4a7a'],  tops: ['#1a1a2e','#333333','#c0392b','#2d4a7a'] },
+};
+
+const COLOR_NAMES = {
+  '#1a1a2e':'Navy','#2d4a7a':'Blue','#4a3728':'Brown','#333333':'Charcoal',
+  '#f5f5f5':'White','#c8a882':'Beige','#e8d5b0':'Cream','#c0392b':'Red',
+  '#2ecc71':'Green','#cccccc':'Light grey','#666666':'Grey',
+};
+
+function getOutfit(sneaker) {
+  const bucket = colorBucketNearest(sneaker.colorPrimary);
+  if (!bucket) return null;
+  const map = OUTFIT_MAP[bucket.name];
+  if (!map) return null;
+  return {
+    pants: [map.pants[0], map.pants[1]],
+    tops:  [map.tops[0],  map.tops[1]],
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Render
+// ─────────────────────────────────────────────────────────────────────────────
+function render() {
+  const total = collection.length;
+  const worn  = collection.filter(s => s.worn).length;
+
+  document.getElementById('cycle-text').textContent =
+    total === 0 ? 'YOUR COLLECTION AWAITS' : worn + ' OF ' + total + ' WORN THIS CYCLE';
+
+  const pb = document.getElementById('progress-bar');
+  if (total > 0) {
+    pb.style.display = 'block';
     const pf = document.getElementById('progress-fill');
-    if (total > 0) {
-      pb.style.display = 'block';
-      const pct = (worn / total) * 100;
-      pf.style.width = pct + '%';
-      pf.style.background = worn === total
-        ? 'linear-gradient(90deg,#00FF88,#00D4FF)'
-        : 'linear-gradient(90deg,#FFD700,#FF6B35)';
-    } else {
-      pb.style.display = 'none';
+    pf.style.width = ((worn/total)*100) + '%';
+    pf.style.background = worn === total
+      ? 'linear-gradient(90deg,#00FF88,#00D4FF)'
+      : 'linear-gradient(90deg,#FFD700,#FF6B35)';
+  } else { pb.style.display = 'none'; }
+
+  document.getElementById('tabs').style.display = total > 0 ? 'flex' : 'none';
+  document.getElementById('tab-all').textContent    = 'All (' + total + ')';
+  document.getElementById('tab-unworn').textContent = 'Unworn (' + (total - worn) + ')';
+  document.getElementById('tab-worn').textContent   = 'Worn (' + worn + ')';
+
+  // Filter
+  let filtered = currentTab === 'worn'   ? collection.filter(s => s.worn) :
+                 currentTab === 'unworn' ? collection.filter(s => !s.worn) :
+                 collection;
+
+  // Search
+  const q = document.getElementById('search-inp').value.trim().toLowerCase();
+  if (q) filtered = filtered.filter(s => s.name.toLowerCase().includes(q));
+
+  // Color filter
+  if (selectedColorFilter) {
+    filtered = filtered.filter(s => sneakerMatchesBucket(s, selectedColorFilter));
+  }
+
+  // Sort
+  const sort = document.getElementById('sort-select').value;
+  if (sort === 'name')      filtered = [...filtered].sort((a,b) => a.name.localeCompare(b.name));
+  if (sort === 'name-desc') filtered = [...filtered].sort((a,b) => b.name.localeCompare(a.name));
+
+  document.getElementById('empty-state').style.display = total === 0 ? 'block' : 'none';
+
+  if (total === 0) {
+    document.getElementById('grid-view').style.display = 'none';
+    document.getElementById('list-view').style.display = 'none';
+    return;
+  }
+
+  if (currentView === 'grid') {
+    document.getElementById('grid-view').style.display = 'grid';
+    document.getElementById('list-view').style.display = 'none';
+    document.getElementById('grid-view').innerHTML = filtered.map(gridCard).join('');
+  } else {
+    document.getElementById('grid-view').style.display = 'none';
+    document.getElementById('list-view').style.display = 'flex';
+    document.getElementById('list-view').innerHTML = filtered.map(listCard).join('');
+  }
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function colorDotsHtml(s) {
+  let html = '<div class="color-dots">';
+  if (s.colorPrimary)   html += '<div class="color-dot" style="background:' + esc(s.colorPrimary) + '" title="Primary"></div>';
+  if (s.colorSecondary) html += '<div class="color-dot" style="background:' + esc(s.colorSecondary) + '" title="Secondary"></div>';
+  html += '</div>';
+  return html;
+}
+
+function outfitHtml(s, small) {
+  const outfit = getOutfit(s);
+  if (!outfit) {
+    return '<div class="' + (small ? 'no-colors-hint' : 'no-colors-hint') + '">Add a color to see outfit suggestions</div>';
+  }
+  if (small) {
+    // grid card compact
+    let html = '<div class="outfit-row">';
+    outfit.pants.slice(0,2).forEach(c => {
+      const nm = COLOR_NAMES[c] || '';
+      html += '<div class="outfit-item"><div class="outfit-icon">👖</div><div class="outfit-swatch" style="background:' + c + '" title="' + nm + '"></div></div>';
+    });
+    html += '<div style="font-size:9px;color:#333;margin:0 2px">|</div>';
+    outfit.tops.slice(0,2).forEach(c => {
+      const nm = COLOR_NAMES[c] || '';
+      html += '<div class="outfit-item"><div class="outfit-icon">👕</div><div class="outfit-swatch" style="background:' + c + '" title="' + nm + '"></div></div>';
+    });
+    html += '</div>';
+    return html;
+  } else {
+    // list row compact
+    let html = '<div class="list-outfit">';
+    outfit.pants.slice(0,2).forEach(c => {
+      html += '<div class="list-outfit-item"><span>👖</span><div class="list-outfit-swatch" style="background:' + c + '"></div><span>' + (COLOR_NAMES[c]||'') + '</span></div>';
+    });
+    html += '<span style="color:#2a2a3a;font-size:10px">|</span>';
+    outfit.tops.slice(0,2).forEach(c => {
+      html += '<div class="list-outfit-item"><span>👕</span><div class="list-outfit-swatch" style="background:' + c + '"></div><span>' + (COLOR_NAMES[c]||'') + '</span></div>';
+    });
+    html += '</div>';
+    return html;
+  }
+}
+
+function gridCard(s) {
+  const border  = s.worn ? '#1a2a1a' : '#1e1e2a';
+  const opacity = s.worn ? '0.72' : '1';
+  const wornBadge = s.worn ? '<div class="worn-badge-abs">WORN</div>' : '';
+  const wornBg  = s.worn ? 'rgba(255,107,53,0.1)' : 'rgba(0,212,255,0.08)';
+  const wornBdr = s.worn ? 'rgba(255,107,53,0.3)' : 'rgba(0,212,255,0.2)';
+  const wornClr = s.worn ? '#FF6B35' : '#00D4FF';
+  const imgHtml = s.img
+    ? '<img src="' + esc(s.img) + '" alt="" style="width:100%;height:100%;object-fit:contain;' + (s.worn?'filter:grayscale(0.4)':'') + '" onerror="this.style.display=\'none\'">'
+    : '<span style="font-size:34px">👟</span>';
+  return '<div class="sv-card grid-card" style="border:1px solid ' + border + ';opacity:' + opacity + '">' +
+    wornBadge +
+    '<div class="img-box">' + imgHtml + '</div>' +
+    '<div class="card-name-txt" title="' + esc(s.name) + '">' + esc(s.name) + '</div>' +
+    colorDotsHtml(s) +
+    outfitHtml(s, true) +
+    '<div class="card-actions">' +
+    '<button class="worn-btn-grid" style="background:' + wornBg + ';border:1px solid ' + wornBdr + ';color:' + wornClr + '" onclick="openConfirm(' + s.id + ')">' + (s.worn?'UNWEAR':'WORN') + '</button>' +
+    '<button class="edit-btn-grid" onclick="openEditModal(' + s.id + ')">✏️</button>' +
+    '<button class="del-btn-grid"  onclick="deleteSneaker(' + s.id + ')">🗑</button>' +
+    '</div></div>';
+}
+
+function listCard(s) {
+  const border  = s.worn ? '#1a2a1a' : '#1e1e2a';
+  const opacity = s.worn ? '0.72' : '1';
+  const nameClr = s.worn ? '#555' : '#f0ede8';
+  const wornBadge = s.worn ? '<div class="worn-badge-list">WORN</div>' : '';
+  const wornBg  = s.worn ? 'rgba(255,107,53,0.1)' : 'rgba(0,212,255,0.08)';
+  const wornBdr = s.worn ? 'rgba(255,107,53,0.3)' : 'rgba(0,212,255,0.2)';
+  const wornClr = s.worn ? '#FF6B35' : '#00D4FF';
+  const imgHtml = s.img
+    ? '<img src="' + esc(s.img) + '" alt="" style="width:100%;height:100%;object-fit:contain" onerror="this.style.display=\'none\'">'
+    : '<span style="font-size:22px">👟</span>';
+  const dotsHtml = '<div class="list-colors">' +
+    (s.colorPrimary   ? '<div class="color-dot" style="background:' + esc(s.colorPrimary)   + '"></div>' : '') +
+    (s.colorSecondary ? '<div class="color-dot" style="background:' + esc(s.colorSecondary) + '"></div>' : '') +
+    '</div>';
+  return '<div class="sv-card list-card" style="border:1px solid ' + border + ';opacity:' + opacity + '">' +
+    '<div class="thumb">' + imgHtml + '</div>' +
+    '<div class="list-info">' +
+    '<div class="list-name" style="color:' + nameClr + '">' + esc(s.name) + '</div>' +
+    dotsHtml +
+    outfitHtml(s, false) +
+    '</div>' +
+    wornBadge +
+    '<div style="display:flex;gap:6px">' +
+    '<button class="worn-btn-list" style="background:' + wornBg + ';border:1px solid ' + wornBdr + ';color:' + wornClr + '" onclick="openConfirm(' + s.id + ')">' + (s.worn?'UNWEAR':'WORN') + '</button>' +
+    '<button class="edit-btn-list" onclick="openEditModal(' + s.id + ')">✏️</button>' +
+    '<button class="del-btn-list"  onclick="deleteSneaker(' + s.id + ')">🗑</button>' +
+    '</div></div>';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Color filter panel
+// ─────────────────────────────────────────────────────────────────────────────
+function buildColorPanel() {
+  // Find which buckets are used in the collection
+  const used = new Set();
+  collection.forEach(s => {
+    const p = colorBucketNearest(s.colorPrimary);
+    if (p) used.add(p.name);
+  });
+
+  const panel = document.getElementById('color-filter-panel');
+  panel.innerHTML = '';
+  if (used.size === 0) return;
+
+  COLOR_BUCKETS.filter(b => used.has(b.name)).forEach(b => {
+    const sw = document.createElement('div');
+    sw.className = 'cf-swatch' + (selectedColorFilter === b.name ? ' selected' : '');
+    sw.style.background = b.hex;
+    sw.title = b.name;
+    sw.onclick = () => {
+      selectedColorFilter = selectedColorFilter === b.name ? null : b.name;
+      updateColorFilterBtn();
+      buildColorPanel();
+      render();
+    };
+    panel.appendChild(sw);
+  });
+
+  const clear = document.createElement('button');
+  clear.className = 'cf-clear';
+  clear.textContent = 'Clear';
+  clear.onclick = () => { selectedColorFilter = null; updateColorFilterBtn(); buildColorPanel(); render(); };
+  panel.appendChild(clear);
+}
+
+function toggleColorPanel() {
+  colorPanelOpen = !colorPanelOpen;
+  document.getElementById('color-filter-panel').style.display = colorPanelOpen ? 'flex' : 'none';
+  document.getElementById('color-filter-btn').classList.toggle('active', colorPanelOpen || !!selectedColorFilter);
+}
+
+function updateColorFilterBtn() {
+  const btn = document.getElementById('color-filter-btn');
+  const lbl = document.getElementById('color-filter-label');
+  btn.classList.toggle('active', !!selectedColorFilter || colorPanelOpen);
+  lbl.textContent = selectedColorFilter ? selectedColorFilter : 'Color';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// View / Tab
+// ─────────────────────────────────────────────────────────────────────────────
+function setView(v) {
+  currentView = v;
+  document.getElementById('btn-grid').classList.toggle('active', v === 'grid');
+  document.getElementById('btn-list').classList.toggle('active', v === 'list');
+  render();
+}
+function setTab(t) {
+  currentTab = t;
+  ['all','unworn','worn'].forEach(x => document.getElementById('tab-'+x).classList.toggle('active', x === t));
+  render();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Add / Edit modal
+// ─────────────────────────────────────────────────────────────────────────────
+function openAddModal() {
+  editId = null;
+  document.getElementById('modal-title-text').textContent = 'ADD SNEAKER';
+  document.getElementById('sneaker-name-inp').value = '';
+  document.getElementById('primary-color-inp').value = '#ffffff';
+  document.getElementById('secondary-color-inp').value = '#cccccc';
+  document.getElementById('primary-preview').style.background = '#ffffff';
+  document.getElementById('secondary-preview').style.background = '#cccccc';
+  removeImg();
+  document.getElementById('add-overlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('sneaker-name-inp').focus(), 100);
+  updateAddBtn();
+  updateColorLabels();
+}
+
+function openEditModal(id) {
+  const s = collection.find(x => x.id === id);
+  if (!s) return;
+  editId = id;
+  document.getElementById('modal-title-text').textContent = 'EDIT SNEAKER';
+  document.getElementById('sneaker-name-inp').value = s.name;
+  const pc = s.colorPrimary   || '#ffffff';
+  const sc = s.colorSecondary || '#cccccc';
+  document.getElementById('primary-color-inp').value   = pc;
+  document.getElementById('secondary-color-inp').value = sc;
+  document.getElementById('primary-preview').style.background   = pc;
+  document.getElementById('secondary-preview').style.background = sc;
+  pendingImg = s.img || null;
+  if (pendingImg) {
+    document.getElementById('img-preview').src = pendingImg;
+    document.getElementById('img-preview').style.display = 'block';
+    document.getElementById('upload-placeholder').style.display = 'none';
+    document.getElementById('remove-img-btn').style.display = 'block';
+    document.getElementById('auto-extract-btn').disabled = false;
+  } else {
+    removeImg();
+  }
+  document.getElementById('add-overlay').style.display = 'flex';
+  updateAddBtn();
+  updateColorLabels();
+}
+
+function closeAddModal() {
+  document.getElementById('add-overlay').style.display = 'none';
+  editId = null;
+  removeImg();
+}
+
+function syncColorPreview(which) {
+  const val = document.getElementById(which + '-color-inp').value;
+  document.getElementById(which + '-preview').style.background = val;
+  updateColorLabels();
+}
+
+function updateColorLabels() {
+  const pc = document.getElementById('primary-color-inp').value;
+  const sc = document.getElementById('secondary-color-inp').value;
+  const pb = colorBucket(pc);
+  const sb = colorBucket(sc);
+  const pl = document.getElementById('primary-color-label');
+  const sl = document.getElementById('secondary-color-label');
+  if (pl) pl.textContent = pb ? pb.name : 'Unclassified';
+  if (sl) sl.textContent = sb ? sb.name : 'Unclassified';
+}
+
+// Find nearest bucket by hue distance if exact match fails
+function colorBucketNearest(hex) {
+  if (!hex) return null;
+  const exact = colorBucket(hex);
+  if (exact) return exact;
+  // Try relaxing saturation threshold — some muted tones fall just under
+  const h = hexToHsl(hex);
+  // Try each bucket with saturation floor halved
+  for (const b of COLOR_BUCKETS) {
+    if (b.name === 'White' || b.name === 'Black' || b.name === 'Grey') continue;
+    const relaxed = { h: h.h, s: h.s * 2, l: h.l }; // double saturation to test
+    if (b.test(relaxed)) return b;
+  }
+  return null;
+}
+
+function handleFile(inp) {
+  const f = inp.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    pendingImg = ev.target.result;
+    document.getElementById('img-preview').src = pendingImg;
+    document.getElementById('img-preview').style.display = 'block';
+    document.getElementById('upload-placeholder').style.display = 'none';
+    document.getElementById('remove-img-btn').style.display = 'block';
+    document.getElementById('auto-extract-btn').disabled = false;
+    autoExtractColors();
+  };
+  reader.readAsDataURL(f);
+}
+
+function removeImg() {
+  pendingImg = null;
+  document.getElementById('img-preview').style.display = 'none';
+  document.getElementById('img-preview').src = '';
+  document.getElementById('upload-placeholder').style.display = 'block';
+  document.getElementById('remove-img-btn').style.display = 'none';
+  document.getElementById('file-inp').value = '';
+  document.getElementById('auto-extract-btn').disabled = true;
+}
+
+function updateAddBtn() {
+  const name = document.getElementById('sneaker-name-inp').value.trim();
+  const btn  = document.getElementById('add-to-vault-btn');
+  btn.textContent = editId ? 'SAVE CHANGES' : 'ADD TO VAULT';
+  if (name) {
+    btn.style.background = 'linear-gradient(135deg,#FFD700,#FF8C00)';
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  } else {
+    btn.style.background = '#1a1a22';
+    btn.style.opacity = '0.35';
+    btn.style.cursor = 'not-allowed';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('sneaker-name-inp').addEventListener('input', updateAddBtn);
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Auto color extraction
+// ─────────────────────────────────────────────────────────────────────────────
+function autoExtractColors() {
+  if (!pendingImg) return;
+  const btn = document.getElementById('auto-extract-btn');
+  btn.innerHTML = '<span style="display:inline-block;animation:spin 0.8s linear infinite">⟳</span>';
+  btn.disabled = true;
+
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.getElementById('extract-canvas');
+    const ctx = canvas.getContext('2d');
+    const W = 100, H = 100;
+    canvas.width = W; canvas.height = H;
+    ctx.drawImage(img, 0, 0, W, H);
+    const data = ctx.getImageData(0, 0, W, H).data;
+
+    const pixels = [];
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
+      if (a < 80) continue;
+      if (r > 248 && g > 248 && b > 248) continue; // skip only pure white bg
+      pixels.push([r, g, b]);
     }
 
-    // Tabs
-    const tabsEl = document.getElementById('tabs');
-    tabsEl.style.display = total > 0 ? 'flex' : 'none';
-    document.getElementById('tab-all').textContent    = 'All (' + total + ')';
-    document.getElementById('tab-unworn').textContent = 'Unworn (' + (total - worn) + ')';
-    document.getElementById('tab-worn').textContent   = 'Worn (' + worn + ')';
-
-    // Filter
-    const filtered = currentTab === 'worn'   ? collection.filter(s => s.worn) :
-                     currentTab === 'unworn' ? collection.filter(s => !s.worn) :
-                     collection;
-
-    // Empty state
-    document.getElementById('empty-state').style.display = total === 0 ? 'block' : 'none';
-
-    if (total === 0) {
-      document.getElementById('grid-view').style.display = 'none';
-      document.getElementById('list-view').style.display = 'none';
+    if (pixels.length < 20) {
+      btn.innerHTML = '⚠️ No colors found';
+      btn.disabled = false;
+      setTimeout(() => { btn.innerHTML = '⟳ Auto-detect'; }, 2500);
       return;
     }
 
-    if (currentView === 'grid') {
-      document.getElementById('grid-view').style.display = 'grid';
-      document.getElementById('list-view').style.display = 'none';
-      document.getElementById('grid-view').innerHTML = filtered.map(s => gridCard(s)).join('');
-    } else {
-      document.getElementById('grid-view').style.display = 'none';
-      document.getElementById('list-view').style.display = 'flex';
-      document.getElementById('list-view').innerHTML = filtered.map(s => listCard(s)).join('');
+    // Quantize into 16-step buckets, pick top 2 most frequent
+    const freq = {};
+    pixels.forEach(([r,g,b]) => {
+      const key = [Math.round(r/16)*16, Math.round(g/16)*16, Math.round(b/16)*16].join(',');
+      freq[key] = (freq[key]||0) + 1;
+    });
+    const sorted = Object.entries(freq).sort((a,b) => b[1]-a[1]);
+
+    function toHex(key) {
+      return '#' + key.split(',').map(x => Math.min(255,parseInt(x)).toString(16).padStart(2,'0')).join('');
     }
+
+    const primary   = toHex(sorted[0][0]);
+    const secondary = sorted.length > 1 ? toHex(sorted[1][0]) : primary;
+
+    document.getElementById('primary-color-inp').value   = primary;
+    document.getElementById('secondary-color-inp').value = secondary;
+    document.getElementById('primary-preview').style.background   = primary;
+    document.getElementById('secondary-preview').style.background = secondary;
+    updateColorLabels();
+
+    btn.innerHTML = '✓ Done';
+    btn.disabled = false;
+    setTimeout(() => { btn.innerHTML = '⟳ Auto-detect'; }, 2000);
+  };
+  img.onerror = () => {
+    btn.innerHTML = '⚠️ Failed';
+    btn.disabled = false;
+    setTimeout(() => { btn.innerHTML = '⟳ Auto-detect'; }, 2000);
+  };
+  img.src = pendingImg;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Save
+// ─────────────────────────────────────────────────────────────────────────────
+function doAdd() {
+  const name = document.getElementById('sneaker-name-inp').value.trim();
+  if (!name) return;
+  const pc = document.getElementById('primary-color-inp').value || '#ffffff';
+  const sc = document.getElementById('secondary-color-inp').value || '#cccccc';
+
+  if (editId !== null) {
+    collection = collection.map(s => s.id === editId
+      ? { ...s, name, img: pendingImg, colorPrimary: pc, colorSecondary: sc }
+      : s
+    );
+  } else {
+    collection.push({ id: Date.now(), name, img: pendingImg, colorPrimary: pc, colorSecondary: sc, worn: false });
   }
+  persist();
+  closeAddModal();
+}
 
-  function imgHtml(s, size) {
-    if (s.img) {
-      return '<img src="' + s.img + '" alt="" style="width:100%;height:100%;object-fit:contain;' +
-        (s.worn ? 'filter:grayscale(0.4);' : '') + '" onerror="this.style.display=\'none\'">';
-    }
-    return '<span class="shoe-emoji">👟</span>';
+// ─────────────────────────────────────────────────────────────────────────────
+// Worn confirm
+// ─────────────────────────────────────────────────────────────────────────────
+function openConfirm(id) {
+  const s = collection.find(x => x.id === id);
+  if (!s) return;
+  confirmId = id;
+  document.getElementById('confirm-icon').textContent  = s.worn ? '↩️' : '👟';
+  document.getElementById('confirm-title').textContent = s.worn ? 'MARK AS UNWORN?' : 'MARK AS WORN?';
+  document.getElementById('confirm-title').style.color = s.worn ? '#FF6B35' : '#00D4FF';
+  document.getElementById('confirm-name').textContent  = s.name;
+  document.getElementById('confirm-sub').textContent   = s.worn ? 'Returns it to your active rotation.' : 'Logs this pair as worn this cycle.';
+  const gb = document.getElementById('confirm-go-btn');
+  gb.style.background = s.worn ? 'rgba(255,107,53,0.15)' : 'rgba(0,212,255,0.12)';
+  gb.style.border     = '1px solid ' + (s.worn ? '#FF6B35' : '#00D4FF');
+  gb.style.color      = s.worn ? '#FF6B35' : '#00D4FF';
+  document.getElementById('confirm-overlay').style.display = 'flex';
+}
+function closeConfirm() { document.getElementById('confirm-overlay').style.display = 'none'; confirmId = null; }
+function doToggleWorn() {
+  if (confirmId === null) return;
+  collection = collection.map(s => s.id === confirmId ? { ...s, worn: !s.worn } : s);
+  persist();
+  closeConfirm();
+  if (collection.length > 0 && collection.every(s => s.worn)) setTimeout(showCelebration, 300);
+}
+function deleteSneaker(id) { collection = collection.filter(s => s.id !== id); persist(); }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Confetti
+// ─────────────────────────────────────────────────────────────────────────────
+function showCelebration() {
+  const layer = document.getElementById('confetti-layer');
+  layer.style.display = 'block';
+  const colors = ['#FFD700','#FF6B35','#00D4FF','#FF3CAC','#00FF88'];
+  for (let i = 0; i < 60; i++) {
+    const el = document.createElement('div');
+    el.className = 'cf-piece';
+    const size = 6 + Math.random() * 8;
+    el.style.cssText = 'left:' + (Math.random()*100) + '%;width:' + size + 'px;height:' + size + 'px;background:' + colors[i%5] + ';animation:fall ' + (2+Math.random()*2) + 's ' + (Math.random()*2) + 's linear forwards';
+    layer.appendChild(el);
   }
-
-  function gridCard(s) {
-    const border  = s.worn ? '#1a2a1a' : '#1e1e2a';
-    const opacity = s.worn ? '0.72' : '1';
-    const wornBadge = s.worn ? '<div class="worn-badge">WORN</div>' : '';
-    const wornBg  = s.worn ? 'rgba(255,107,53,0.1)' : 'rgba(0,212,255,0.08)';
-    const wornBdr = s.worn ? 'rgba(255,107,53,0.3)' : 'rgba(0,212,255,0.2)';
-    const wornClr = s.worn ? '#FF6B35' : '#00D4FF';
-    const wornLbl = s.worn ? 'UNWEAR' : 'WORN';
-    return '<div class="sv-card grid-card" style="border:1px solid ' + border + ';opacity:' + opacity + '">' +
-      wornBadge +
-      '<div class="img-box">' + imgHtml(s) + '</div>' +
-      '<div class="card-name" title="' + esc(s.name) + '">' + esc(s.name) + '</div>' +
-      '<div class="card-actions">' +
-      '<button class="worn-btn-grid" style="background:' + wornBg + ';border:1px solid ' + wornBdr + ';color:' + wornClr + '" onclick="openConfirm(' + s.id + ')">' + wornLbl + '</button>' +
-      '<button class="del-btn-grid" onclick="deleteSneaker(' + s.id + ')">🗑</button>' +
-      '</div></div>';
-  }
-
-  function listCard(s) {
-    const border  = s.worn ? '#1a2a1a' : '#1e1e2a';
-    const opacity = s.worn ? '0.72' : '1';
-    const nameClr = s.worn ? '#555' : '#f0ede8';
-    const wornBadge = s.worn ? '<div class="worn-badge-list">WORN</div>' : '';
-    const wornBg  = s.worn ? 'rgba(255,107,53,0.1)' : 'rgba(0,212,255,0.08)';
-    const wornBdr = s.worn ? 'rgba(255,107,53,0.3)' : 'rgba(0,212,255,0.2)';
-    const wornClr = s.worn ? '#FF6B35' : '#00D4FF';
-    const wornLbl = s.worn ? 'UNWEAR' : 'WORN';
-    return '<div class="sv-card list-card" style="border:1px solid ' + border + ';opacity:' + opacity + '">' +
-      '<div class="thumb">' + imgHtml(s) + '</div>' +
-      '<div class="card-name" style="color:' + nameClr + '">' + esc(s.name) + '</div>' +
-      wornBadge +
-      '<div style="display:flex;gap:8px">' +
-      '<button class="worn-btn-list" style="background:' + wornBg + ';border:1px solid ' + wornBdr + ';color:' + wornClr + '" onclick="openConfirm(' + s.id + ')">' + wornLbl + '</button>' +
-      '<button class="del-btn-list" onclick="deleteSneaker(' + s.id + ')">🗑</button>' +
-      '</div></div>';
-  }
-
-  function esc(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  // ---- View / Tab ----
-  function setView(v) {
-    currentView = v;
-    document.getElementById('btn-grid').classList.toggle('active', v === 'grid');
-    document.getElementById('btn-list').classList.toggle('active', v === 'list');
-    render();
-  }
-
-  function setTab(t) {
-    currentTab = t;
-    ['all','unworn','worn'].forEach(x => document.getElementById('tab-'+x).classList.toggle('active', x === t));
-    render();
-  }
-
-  // ---- Add modal ----
-  function openAddModal() {
-    document.getElementById('sneaker-name-inp').value = '';
-    removeImg();
-    document.getElementById('add-overlay').style.display = 'flex';
-    setTimeout(() => document.getElementById('sneaker-name-inp').focus(), 100);
-    updateAddBtn();
-  }
-
-  function closeAddModal() {
-    document.getElementById('add-overlay').style.display = 'none';
-    removeImg();
-  }
-
-  function handleFile(inp) {
-    const f = inp.files[0];
-    if (!f) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      pendingImg = ev.target.result;
-      document.getElementById('img-preview').src = pendingImg;
-      document.getElementById('img-preview').style.display = 'block';
-      document.getElementById('upload-placeholder').style.display = 'none';
-      document.getElementById('remove-img-btn').style.display = 'block';
-    };
-    reader.readAsDataURL(f);
-  }
-
-  function removeImg() {
-    pendingImg = null;
-    document.getElementById('img-preview').style.display = 'none';
-    document.getElementById('img-preview').src = '';
-    document.getElementById('upload-placeholder').style.display = 'block';
-    document.getElementById('remove-img-btn').style.display = 'none';
-    document.getElementById('file-inp').value = '';
-  }
-
-  function updateAddBtn() {
-    const name = document.getElementById('sneaker-name-inp').value.trim();
-    const btn  = document.getElementById('add-to-vault-btn');
-    if (name) {
-      btn.style.background = 'linear-gradient(135deg,#FFD700,#FF8C00)';
-      btn.style.opacity = '1';
-      btn.style.cursor = 'pointer';
-    } else {
-      btn.style.background = '#1a1a22';
-      btn.style.opacity = '0.35';
-      btn.style.cursor = 'not-allowed';
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('sneaker-name-inp').addEventListener('input', updateAddBtn);
-  });
-
-  function doAdd() {
-    const name = document.getElementById('sneaker-name-inp').value.trim();
-    if (!name) return;
-    collection.push({ id: Date.now(), name: name, img: pendingImg, worn: false });
+  setTimeout(() => {
+    layer.style.display = 'none';
+    layer.querySelectorAll('.cf-piece').forEach(el => el.remove());
+    collection = collection.map(s => ({ ...s, worn: false }));
     persist();
-    closeAddModal();
-  }
+  }, 4500);
+}
 
-  // ---- Worn confirm ----
-  function openConfirm(id) {
-    const s = collection.find(x => x.id === id);
-    if (!s) return;
-    confirmId = id;
-    document.getElementById('confirm-icon').textContent  = s.worn ? '↩️' : '👟';
-    document.getElementById('confirm-title').textContent = s.worn ? 'MARK AS UNWORN?' : 'MARK AS WORN?';
-    document.getElementById('confirm-title').style.color = s.worn ? '#FF6B35' : '#00D4FF';
-    document.getElementById('confirm-name').textContent  = s.name;
-    document.getElementById('confirm-sub').textContent   = s.worn ? 'Returns it to your active rotation.' : 'Logs this pair as worn this cycle.';
-    const goBtn = document.getElementById('confirm-go-btn');
-    goBtn.style.background = s.worn ? 'rgba(255,107,53,0.15)' : 'rgba(0,212,255,0.12)';
-    goBtn.style.border     = '1px solid ' + (s.worn ? '#FF6B35' : '#00D4FF');
-    goBtn.style.color      = s.worn ? '#FF6B35' : '#00D4FF';
-    document.getElementById('confirm-overlay').style.display = 'flex';
-  }
-
-  function closeConfirm() {
-    document.getElementById('confirm-overlay').style.display = 'none';
-    confirmId = null;
-  }
-
-  function doToggleWorn() {
-    if (confirmId === null) return;
-    collection = collection.map(s => s.id === confirmId ? { ...s, worn: !s.worn } : s);
-    persist();
-    closeConfirm();
-    if (collection.length > 0 && collection.every(s => s.worn)) {
-      setTimeout(showCelebration, 300);
-    }
-  }
-
-  function deleteSneaker(id) {
-    collection = collection.filter(s => s.id !== id);
-    persist();
-  }
-
-  // ---- Celebration ----
-  function showCelebration() {
-    const layer = document.getElementById('confetti-layer');
-    layer.style.display = 'block';
-    // Generate pieces
-    const colors = ['#FFD700','#FF6B35','#00D4FF','#FF3CAC','#00FF88'];
-    for (let i = 0; i < 60; i++) {
-      const el = document.createElement('div');
-      el.className = 'cf-piece';
-      const size = 6 + Math.random() * 8;
-      el.style.cssText = [
-        'left:' + (Math.random()*100) + '%',
-        'width:' + size + 'px',
-        'height:' + size + 'px',
-        'background:' + colors[i % 5],
-        'animation:fall ' + (2 + Math.random()*2) + 's ' + (Math.random()*2) + 's linear forwards',
-      ].join(';');
-      layer.appendChild(el);
-    }
-    setTimeout(() => {
-      layer.style.display = 'none';
-      layer.querySelectorAll('.cf-piece').forEach(el => el.remove());
-      collection = collection.map(s => ({ ...s, worn: false }));
-      persist();
-    }, 4500);
-  }
-
-  // ---- Init ----
-  load();
+// ─────────────────────────────────────────────────────────────────────────────
+// Init
+// ─────────────────────────────────────────────────────────────────────────────
+load();
 </script>
 </body>
 </html>
