@@ -70,35 +70,36 @@
     #empty-state p { color: #3a3a4a; font-size: 14px; margin-bottom: 24px; }
     #empty-state .start-btn { padding: 13px 32px; background: linear-gradient(135deg,#FFD700,#FF8C00); color: #080810; border-radius: 12px; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; box-shadow: 0 8px 24px rgba(255,180,0,0.2); }
 
-    #grid-view { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
+    #grid-view { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; min-width: 0; }
     @media (min-width: 700px) { #grid-view { grid-template-columns: repeat(4, 1fr); } }
+    #grid-view > * { min-width: 0; overflow: hidden; }
 
-    .grid-card { background: #13131a; border-radius: 14px; padding: 12px; position: relative; }
-    .worn-badge-abs { position: absolute; top: 8px; right: 8px; background: rgba(0,200,100,0.12); border: 1px solid rgba(0,200,100,0.25); border-radius: 20px; padding: 2px 6px; font-size: 8px; color: #00C864; font-weight: 700; letter-spacing: 1px; }
-    .img-box { display: flex; justify-content: center; align-items: center; height: 100px; margin-bottom: 8px; background: #0a0a12; border-radius: 10px; overflow: hidden; }
-    .img-box img { width: 100%; height: 100%; object-fit: contain; }
-    .card-name-txt { font-weight: 600; font-size: 11px; line-height: 1.3; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .color-dots { display: flex; gap: 5px; margin-bottom: 8px; align-items: center; }
-    .color-dot { width: 13px; height: 13px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; }
-    .color-dot-label { font-size: 9px; color: #555; }
-    .card-actions { display: flex; gap: 5px; }
-    .worn-btn-grid { flex: 1; padding: 6px 0; border-radius: 7px; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; transition: filter 0.15s; }
+    .grid-card { background: #13131a; border-radius: 14px; padding: 10px; position: relative; width: 100%; min-width: 0; overflow: hidden; }
+    .worn-badge-abs { position: absolute; top: 8px; right: 8px; background: rgba(0,200,100,0.12); border: 1px solid rgba(0,200,100,0.25); border-radius: 20px; padding: 2px 6px; font-size: 8px; color: #00C864; font-weight: 700; letter-spacing: 1px; max-width: 60px; }
+    .img-box { display: flex; justify-content: center; align-items: center; height: 90px; margin-bottom: 8px; background: #0a0a12; border-radius: 10px; overflow: hidden; width: 100%; }
+    .img-box img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .card-name-txt { font-weight: 600; font-size: 11px; line-height: 1.3; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; display: block; }
+    .color-dots { display: flex; gap: 4px; margin-bottom: 7px; align-items: center; overflow: hidden; width: 100%; }
+    .color-dot { width: 11px; height: 11px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); flex-shrink: 0; }
+    .color-dot-label { font-size: 9px; color: #555; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 50px; }
+    .card-actions { display: flex; gap: 4px; width: 100%; min-width: 0; }
+    .worn-btn-grid { flex: 1; min-width: 0; padding: 6px 0; border-radius: 7px; font-size: 9px; font-weight: 700; letter-spacing: 0.5px; transition: filter 0.15s; overflow: hidden; }
     .worn-btn-grid:hover { filter: brightness(1.3); }
-    .edit-btn-grid { padding: 6px 7px; background: rgba(255,255,255,0.04); border: 1px solid #1e1e2a; border-radius: 7px; color: #555; font-size: 11px; }
-    .del-btn-grid  { padding: 6px 7px; background: rgba(255,40,40,0.05); border: 1px solid rgba(255,40,40,0.1); border-radius: 7px; color: #553333; font-size: 11px; }
+    .edit-btn-grid { padding: 6px 7px; background: rgba(255,255,255,0.04); border: 1px solid #1e1e2a; border-radius: 7px; color: #555; font-size: 11px; flex-shrink: 0; }
+    .del-btn-grid  { padding: 6px 7px; background: rgba(255,40,40,0.05); border: 1px solid rgba(255,40,40,0.1); border-radius: 7px; color: #553333; font-size: 11px; flex-shrink: 0; }
 
-    #list-view { display: flex; flex-direction: column; gap: 8px; }
-    .list-card { background: #13131a; border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; }
-    .thumb { width: 54px; height: 54px; background: #0a0a12; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    #list-view { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+    .list-card { background: #13131a; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; width: 100%; min-width: 0; overflow: hidden; }
+    .thumb { width: 52px; height: 52px; background: #0a0a12; border-radius: 8px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
     .thumb img { width: 100%; height: 100%; object-fit: contain; }
-    .list-info { flex: 1; min-width: 0; }
-    .list-name { font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 4px; }
-    .list-colors { display: flex; gap: 5px; align-items: center; }
-    .worn-badge-list { background: rgba(0,200,100,0.1); border: 1px solid rgba(0,200,100,0.2); border-radius: 20px; padding: 3px 8px; font-size: 9px; color: #00C864; font-weight: 700; letter-spacing: 1px; white-space: nowrap; }
-    .worn-btn-list { padding: 7px 12px; border-radius: 8px; font-size: 10px; font-weight: 700; white-space: nowrap; transition: filter 0.15s; }
+    .list-info { flex: 1; min-width: 0; overflow: hidden; }
+    .list-name { font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 4px; width: 100%; display: block; }
+    .list-colors { display: flex; gap: 4px; align-items: center; overflow: hidden; }
+    .worn-badge-list { background: rgba(0,200,100,0.1); border: 1px solid rgba(0,200,100,0.2); border-radius: 20px; padding: 3px 8px; font-size: 9px; color: #00C864; font-weight: 700; letter-spacing: 1px; white-space: nowrap; flex-shrink: 0; }
+    .worn-btn-list { padding: 7px 10px; border-radius: 8px; font-size: 10px; font-weight: 700; white-space: nowrap; transition: filter 0.15s; flex-shrink: 0; }
     .worn-btn-list:hover { filter: brightness(1.3); }
-    .edit-btn-list { padding: 7px 8px; background: rgba(255,255,255,0.04); border: 1px solid #1e1e2a; border-radius: 8px; color: #555; font-size: 12px; }
-    .del-btn-list  { padding: 7px 8px; background: none; border: 1px solid #1e1e2a; border-radius: 8px; color: #443333; font-size: 12px; }
+    .edit-btn-list { padding: 7px 8px; background: rgba(255,255,255,0.04); border: 1px solid #1e1e2a; border-radius: 8px; color: #555; font-size: 12px; flex-shrink: 0; }
+    .del-btn-list  { padding: 7px 8px; background: none; border: 1px solid #1e1e2a; border-radius: 8px; color: #443333; font-size: 12px; flex-shrink: 0; }
 
     /* Modals */
     .overlay { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.92); display: flex; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
@@ -766,6 +767,32 @@ function showCelebration() {
 }
 
 load();
+
+// Service worker — forces fresh content on every load
+if ('serviceWorker' in navigator) {
+  // Inline service worker as a blob so we don't need a separate sw.js file
+  const swCode = `
+    const CACHE = 'sneaker-vault-sw-v1';
+    self.addEventListener('install', e => { self.skipWaiting(); });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(keys => Promise.all(keys.map(k => caches.delete(k)))));
+      self.clients.claim();
+    });
+    self.addEventListener('fetch', e => {
+      // Network first — always try to get fresh content, fall back to cache
+      e.respondWith(
+        fetch(e.request).then(res => {
+          const clone = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone));
+          return res;
+        }).catch(() => caches.match(e.request))
+      );
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
 </script>
 </body>
 </html>
