@@ -281,6 +281,7 @@
 
 <script>
 const STORAGE_KEY = 'sneaker-vault-v6';
+const OLD_KEYS = ['sneaker-vault-v5','sneaker-vault-v4','sneaker-vault-v3','sneaker-vault-v2','sneaker-vault'];
 let collection  = [];
 let currentView = 'grid';
 let currentTab  = 'unworn';
@@ -419,8 +420,31 @@ function extractColors(dataUrl, callback) {
 
 // ─── Storage ──────────────────────────────────────────────────────────────────
 function load() {
-  try { const r = localStorage.getItem(STORAGE_KEY); if (r) collection = JSON.parse(r); } catch {}
-  // Show compress banner once, only if collection has images and hasn't been run before
+  try {
+    const r = localStorage.getItem(STORAGE_KEY);
+    if (r) collection = JSON.parse(r);
+  } catch {}
+
+  // If nothing found under current key, check all old keys
+  if (collection.length === 0) {
+    for (const oldKey of OLD_KEYS) {
+      try {
+        const r = localStorage.getItem(oldKey);
+        if (r) {
+          const parsed = JSON.parse(r);
+          if (parsed && parsed.length > 0) {
+            collection = parsed;
+            // Migrate to current key
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collection)); } catch {}
+            console.log('Recovered ' + collection.length + ' sneakers from ' + oldKey);
+            break;
+          }
+        }
+      } catch {}
+    }
+  }
+
+  // Show compress banner once if collection has images and hasn't been compressed yet
   const done = localStorage.getItem('sv-compressed');
   const hasPics = collection.some(s => s.img);
   const banner = document.getElementById('compress-banner');
