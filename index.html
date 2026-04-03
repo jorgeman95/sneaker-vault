@@ -331,7 +331,7 @@ function bucketName(hex) { const b = getBucket(hex); return b ? b.name : ''; }
 function compressImage(dataUrl, callback) {
   const img = new Image();
   img.onload = () => {
-    const MAX = 400;
+    const MAX = 200; // 200px max — still sharp at card size, tiny in storage
     let w = img.width, h = img.height;
     if (w > MAX || h > MAX) {
       if (w > h) { h = Math.round(h*MAX/w); w = MAX; }
@@ -340,7 +340,7 @@ function compressImage(dataUrl, callback) {
     const canvas = document.createElement('canvas');
     canvas.width = w; canvas.height = h;
     canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-    callback(canvas.toDataURL('image/jpeg', 0.75));
+    callback(canvas.toDataURL('image/jpeg', 0.6)); // 60% quality JPEG
   };
   img.onerror = () => callback(dataUrl);
   img.src = dataUrl;
