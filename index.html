@@ -172,7 +172,7 @@
       </div>
       <select class="sort-select" id="sort-select" onchange="render()">
         <option value="added">Added ↓</option>
-        <option value="name">Name A–Z</option>
+        <option value="name" selected>Name A–Z</option>
         <option value="name-desc">Name Z–A</option>
       </select>
       <button class="color-filter-btn" id="color-filter-btn" onclick="toggleColorPanel()">
@@ -182,8 +182,8 @@
     <div id="color-filter-panel"></div>
     <div id="progress-bar" style="display:none"><div id="progress-fill"></div></div>
     <div id="tabs" style="display:none">
-      <button class="tab-btn active" onclick="setTab('all')"    id="tab-all">All</button>
-      <button class="tab-btn"        onclick="setTab('unworn')" id="tab-unworn">Unworn</button>
+      <button class="tab-btn"        onclick="setTab('all')"    id="tab-all">All</button>
+      <button class="tab-btn active" onclick="setTab('unworn')" id="tab-unworn">Unworn</button>
       <button class="tab-btn"        onclick="setTab('worn')"   id="tab-worn">Worn</button>
     </div>
   </div>
@@ -200,6 +200,11 @@
   <div id="list-view" style="display:none"></div>
   <div id="bottom-add" style="display:none; text-align:center; padding: 24px 0 32px;">
     <button onclick="openAddModal()" style="padding:12px 32px; background:linear-gradient(135deg,#FFD700,#FF8C00); color:#080810; border-radius:12px; font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:3px; box-shadow:0 4px 20px rgba(255,180,0,0.2);">+ ADD SNEAKER</button>
+  </div>
+  <div id="compress-banner" style="display:none; text-align:center; padding: 0 18px 24px;">
+    <button id="compress-btn" onclick="compressExisting()" style="padding:10px 20px; background:transparent; border:1px solid #2a2a3a; border-radius:10px; color:#555; font-family:'DM Sans',sans-serif; font-size:12px; cursor:pointer;">
+      🗜 Compress existing images to free up storage
+    </button>
   </div>
 </div>
 
@@ -278,7 +283,7 @@
 const STORAGE_KEY = 'sneaker-vault-v6';
 let collection  = [];
 let currentView = 'grid';
-let currentTab  = 'all';
+let currentTab  = 'unworn';
 let pendingImg  = null;
 let confirmId   = null;
 let editId      = null;
@@ -296,15 +301,15 @@ const BUCKETS = [
   { name:'White',  hex:'#f0ede8', test: h => h.l >= 75 },
   { name:'Black',  hex:'#1a1a1a', test: h => h.l < 18 },
   { name:'Grey',   hex:'#888888', test: h => h.l >= 18 && h.l < 75 && h.s < 14 },
-  { name:'Brown',  hex:'#7a4520', test: h => h.h >= 14 && h.h < 46 && h.s >= 14 && h.l < 45 },
+  { name:'Brown',  hex:'#7a4520', test: h => h.h >= 14 && h.h < 46 && h.s >= 16 && h.l >= 10 && h.l < 50 },
   { name:'Red',    hex:'#d93030', test: h => (h.h < 14 || h.h >= 344) && h.s >= 18 },
-  { name:'Orange', hex:'#e07020', test: h => h.h >= 14 && h.h < 46 && h.s >= 18 && h.l >= 45 },
+  { name:'Orange', hex:'#e07020', test: h => h.h >= 14 && h.h < 46 && h.s >= 18 && h.l >= 50 },
   { name:'Yellow', hex:'#d4b800', test: h => h.h >= 46 && h.h < 72 && h.s >= 18 },
-  { name:'Green',  hex:'#2e8b40', test: h => h.h >= 72 && h.h < 168 && h.s >= 14 },
+  { name:'Green',  hex:'#2e8b40', test: h => h.h >= 72 && h.h < 168 && h.s >= 20 },
   { name:'Cyan',   hex:'#00a8b5', test: h => h.h >= 168 && h.h < 200 && h.s >= 25 },
   { name:'Blue',   hex:'#2255cc', test: h => h.h >= 200 && h.h < 265 && h.s >= 12 },
-  { name:'Purple', hex:'#6a28b0', test: h => h.h >= 265 && h.h < 315 && h.s >= 14 },
-  { name:'Pink',   hex:'#cc4488', test: h => h.h >= 315 && h.h < 344 && h.s >= 18 },
+  { name:'Purple', hex:'#6a28b0', test: h => h.h >= 265 && h.h < 310 && h.s >= 14 },
+  { name:'Pink',   hex:'#cc4488', test: h => h.h >= 295 && h.h < 344 && h.s >= 12 && h.l >= 35 },
   { name:'Beige',  hex:'#d4b896', test: h => h.h >= 24 && h.h < 56 && h.s >= 8 && h.s < 40 && h.l >= 55 && h.l < 75 },
 ];
 
@@ -415,11 +420,53 @@ function extractColors(dataUrl, callback) {
 // ─── Storage ──────────────────────────────────────────────────────────────────
 function load() {
   try { const r = localStorage.getItem(STORAGE_KEY); if (r) collection = JSON.parse(r); } catch {}
+  // Show compress banner once, only if collection has images and hasn't been run before
+  const done = localStorage.getItem('sv-compressed');
+  const hasPics = collection.some(s => s.img);
+  const banner = document.getElementById('compress-banner');
+  if (!done && hasPics) banner.style.display = 'block';
   buildColorPanel();
   render();
 }
-function persist() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collection)); } catch {}
+function compressExisting() {
+  const btn = document.getElementById('compress-btn');
+  btn.textContent = '⏳ Compressing…';
+  btn.disabled = true;
+  const withImgs = collection.filter(s => s.img);
+  let done = 0;
+  if (withImgs.length === 0) {
+    document.getElementById('compress-banner').style.display = 'none';
+    localStorage.setItem('sv-compressed', '1');
+    return;
+  }
+  withImgs.forEach(s => {
+    compressImage(s.img, compressed => {
+      collection = collection.map(x => x.id === s.id ? { ...x, img: compressed } : x);
+      done++;
+      if (done === withImgs.length) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(collection));
+          localStorage.setItem('sv-compressed', '1');
+        } catch (e) {
+          alert('Still too large — try removing a few sneaker images manually.');
+          btn.textContent = '🗜 Compress existing images to free up storage';
+          btn.disabled = false;
+          return;
+        }
+        document.getElementById('compress-banner').style.display = 'none';
+        render();
+      }
+    });
+  });
+}
+
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(collection));
+  } catch (e) {
+    alert('Storage full — could not save. Try removing some sneaker images to free up space.');
+    return;
+  }
   buildColorPanel();
   render();
 }
@@ -665,30 +712,50 @@ function closeAddModal() {
   removeImg();
 }
 
+function compressImage(dataUrl, callback) {
+  const img = new Image();
+  img.onload = () => {
+    const MAX = 400; // max width or height in pixels — enough for display, tiny in storage
+    let w = img.width, h = img.height;
+    if (w > MAX || h > MAX) {
+      if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+      else { w = Math.round(w * MAX / h); h = MAX; }
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+    callback(canvas.toDataURL('image/jpeg', 0.75)); // JPEG at 75% quality
+  };
+  img.onerror = () => callback(dataUrl); // fallback: use original
+  img.src = dataUrl;
+}
+
 function handleFile(inp) {
   const f = inp.files[0];
   if (!f) return;
   const reader = new FileReader();
   reader.onload = ev => {
-    pendingImg = ev.target.result;
-    document.getElementById('img-preview').src = pendingImg;
-    document.getElementById('img-preview').style.display = 'block';
-    document.getElementById('upload-placeholder').style.display = 'none';
-    document.getElementById('remove-img-btn').style.display = 'block';
-    // Auto-extract immediately
     const status = document.getElementById('extract-status');
     status.style.color = '#888';
-    status.textContent = 'Detecting colors…';
-    extractColors(pendingImg, (primary, secondary) => {
-      if (!primary) {
-        status.style.color = '#ff8080';
-        status.textContent = 'Could not detect colors — set manually below';
-        return;
-      }
-      setPickerColor('primary',   primary);
-      setPickerColor('secondary', secondary || primary);
-      status.style.color = '#00C864';
-      status.textContent = 'Colors detected ✓';
+    status.textContent = 'Processing…';
+    compressImage(ev.target.result, compressed => {
+      pendingImg = compressed;
+      document.getElementById('img-preview').src = pendingImg;
+      document.getElementById('img-preview').style.display = 'block';
+      document.getElementById('upload-placeholder').style.display = 'none';
+      document.getElementById('remove-img-btn').style.display = 'block';
+      status.textContent = 'Detecting colors…';
+      extractColors(pendingImg, (primary, secondary) => {
+        if (!primary) {
+          status.style.color = '#ff8080';
+          status.textContent = 'Could not detect colors — set manually below';
+          return;
+        }
+        setPickerColor('primary',   primary);
+        setPickerColor('secondary', secondary || primary);
+        status.style.color = '#00C864';
+        status.textContent = 'Colors detected ✓';
+      });
     });
   };
   reader.readAsDataURL(f);
