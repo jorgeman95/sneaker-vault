@@ -536,6 +536,7 @@ function gridCard(s) {
   return '<div class="sv-card grid-card" style="border:1px solid '+bdr+';opacity:'+opc+'">'+(s.worn?'<div class="worn-badge-abs">WORN</div>':'')+
     '<div class="img-box">'+img+'</div>'+
     '<div class="card-name-txt" title="'+esc(s.name)+'">'+esc(s.name)+'</div>'+
+    (s.wornDate?'<div style="font-size:9px;color:#00C864;margin-bottom:4px;letter-spacing:0.3px">Usado: '+esc(s.wornDate)+'</div>':'')+
     colorDotsHtml(s)+
     '<div class="card-actions">'+
     '<button class="worn-btn-grid" style="background:'+wBg+';border:1px solid '+wBd+';color:'+wCl+'" onclick="openConfirm('+s.id+')">'+(s.worn?'UNWEAR':'WORN')+'</button>'+
@@ -556,7 +557,9 @@ function listCard(s) {
   if (s.colorSecondary&&s.colorSecondary!=='#cccccc'&&s.colorSecondary!==s.colorPrimary) dots+='<div class="color-dot" style="background:'+esc(s.colorSecondary)+'"></div>';
   dots+='</div>';
   return '<div class="sv-card list-card" style="border:1px solid '+bdr+';opacity:'+opc+'">'+'<div class="thumb">'+img+'</div>'+
-    '<div class="list-info"><div class="list-name" style="color:'+nCl+'">'+esc(s.name)+'</div>'+dots+'</div>'+
+    '<div class="list-info"><div class="list-name" style="color:'+nCl+'">'+esc(s.name)+'</div>'+
+    (s.wornDate?'<div style="font-size:10px;color:#00C864;margin-bottom:3px">Usado: '+esc(s.wornDate)+'</div>':'')+
+    dots+'</div>'+
     (s.worn?'<div class="worn-badge-list">WORN</div>':'')+
     '<div style="display:flex;gap:6px">'+
     '<button class="worn-btn-list" style="background:'+wBg+';border:1px solid '+wBd+';color:'+wCl+'" onclick="openConfirm('+s.id+')">'+(s.worn?'UNWEAR':'WORN')+'</button>'+
@@ -713,7 +716,12 @@ function openConfirm(id) {
 function closeConfirm(){ document.getElementById('confirm-overlay').style.display='none'; confirmId=null; }
 function doToggleWorn(){
   if(confirmId===null)return;
-  collection=collection.map(s=>s.id===confirmId?{...s,worn:!s.worn}:s);
+  const now = new Date().toLocaleDateString('es-MX', {day:'2-digit', month:'short', year:'numeric'});
+  collection=collection.map(s=>{
+    if(s.id!==confirmId) return s;
+    const nowWorn = !s.worn;
+    return {...s, worn:nowWorn, wornDate: nowWorn ? now : null};
+  });
   persist(); closeConfirm();
   if(collection.length>0&&collection.every(s=>s.worn))setTimeout(showCelebration,300);
 }
